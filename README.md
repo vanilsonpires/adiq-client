@@ -89,7 +89,7 @@ Você precisará também enviar no body da requisição os dados de autenticaç�
 
 	{
 		grant_type: password,
-		username: finet,
+		username: finnet,
 		password: 123456
 	}
 	
