@@ -20,7 +20,7 @@ public interface PaymentSpecification {
 			if(searchParams.getUserid()!=null && searchParams.getUserid()!=0L)
 				predicates.add(criteriaBuilder.equal(root.get("userid"), searchParams.getUserid()));
 			
-			if(searchParams.getOrderNumber()!=null && !searchParams.getOrderNumber().trim().isBlank() )
+			if(searchParams.getOrderNumber()!=null && !searchParams.getOrderNumber().trim().equals("") )
 				predicates.add(criteriaBuilder.equal(root.join("sellerInfo").get("orderNumber"), searchParams.getOrderNumber()));
 			
 			if(searchParams.getDate()!=null) {
