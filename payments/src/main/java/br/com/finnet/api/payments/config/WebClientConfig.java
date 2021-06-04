@@ -3,6 +3,8 @@ package br.com.finnet.api.payments.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -18,7 +20,10 @@ import reactor.core.publisher.Mono;
 @Log4j2
 @Configuration
 @SuppressWarnings("deprecation")
-public class WebClientConfig {
+public class WebClientConfig {	
+	
+	@Value("${adiq.url}")
+	private String url;
 	
 	@Bean
     ReactiveClientRegistrationRepository getRegistration(
@@ -44,7 +49,11 @@ public class WebClientConfig {
 				new ServerOAuth2AuthorizedClientExchangeFilterFunction(
 				clientRegistrations, new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
 		oauth.setDefaultClientRegistrationId("adiq");
-		return WebClient.builder().filter(oauth).filter(logRequest()).build();
+		return WebClient.builder()
+				.baseUrl(url)
+				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.filter(oauth)
+				.filter(logRequest()).build();
 	}
 	
 	private ExchangeFilterFunction logRequest() {

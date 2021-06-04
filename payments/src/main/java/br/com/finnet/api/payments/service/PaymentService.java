@@ -12,7 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import br.com.finnet.api.payments.dto.PaymentSearch;
+import br.com.finnet.api.payments.dto.PaymentCancelRequestDto;
+import br.com.finnet.api.payments.dto.PaymentSearchDto;
 import br.com.finnet.api.payments.entidy.Payment;
 import br.com.finnet.api.payments.entidy.PaymentAuthorization;
 import br.com.finnet.api.payments.exceptions.NotFoundException;
@@ -54,15 +55,15 @@ public class PaymentService {
 	}
 	
 	@Transactional
-	public PaymentAuthorization cancelPayment(String payment) throws NotFoundException {		
+	public PaymentAuthorization cancelPayment(String payment, @Valid PaymentCancelRequestDto cancelRequest) throws NotFoundException {		
 		Optional<PaymentAuthorization> auth = paymentAuhorizationRepository.findByPaymentIdAndValidIsTrue(payment);
 		if(auth.isPresent()) {
-			return paymentAuhorizationRepository.save(paymentAuhorizationRepository.save(adiqService.cancelPayment(paymentAuhorizationRepository.save(auth.get().invalid()))));
+			return paymentAuhorizationRepository.save(paymentAuhorizationRepository.save(adiqService.cancelPayment(payment, cancelRequest)));
 		}
 		throw new NotFoundException("payment not found or is invalid");
 	}
 	
-	public Page<Payment> search(PaymentSearch params){
+	public Page<Payment> search(PaymentSearchDto params){
 		return repository.findAll(PaymentSpecification.search(params), PageRequest.of(params.getPageNum(), params.getPagesize()==0 ? 20 : params.getPagesize()));
 	}
 	

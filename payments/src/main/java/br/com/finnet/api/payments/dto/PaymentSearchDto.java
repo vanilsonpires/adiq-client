@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import lombok.Data;
 
-public @Data class PaymentSearch {
+public @Data class PaymentSearchDto {
 	
 	private Long userid;
 	

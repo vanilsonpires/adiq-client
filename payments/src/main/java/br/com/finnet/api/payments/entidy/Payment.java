@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -63,14 +64,17 @@ public @Data class Payment {
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	private boolean recurrent;
 	
+	@Valid
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cardinfo_id")
 	private CardInfo cardInfo;
 	
+	@Valid
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "seller_info")
 	private SellerInfo sellerInfo;
 	
+	@Valid
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "payment_id")
 	private List<Seller> sellers;

@@ -7,12 +7,12 @@ import javax.persistence.criteria.Predicate;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import br.com.finnet.api.payments.dto.PaymentSearch;
+import br.com.finnet.api.payments.dto.PaymentSearchDto;
 import br.com.finnet.api.payments.entidy.Payment;
 
 public interface PaymentSpecification {
 
-	public static Specification<Payment> search(PaymentSearch searchParams) {
+	public static Specification<Payment> search(PaymentSearchDto searchParams) {
 		return (root, query, criteriaBuilder) -> {
 			
 			List<Predicate> predicates = new ArrayList<Predicate>();
