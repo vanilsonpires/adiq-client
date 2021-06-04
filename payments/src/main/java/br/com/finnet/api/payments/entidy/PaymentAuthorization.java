@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -45,6 +46,9 @@ public @Data class PaymentAuthorization {
 	
 	private LocalDateTime releaseAt;
 	
+	@Column(columnDefinition = "boolean default true", nullable = false)
+	private boolean valid = true;
+	
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "payment", nullable = false)
 	@JsonIgnore
@@ -52,6 +56,11 @@ public @Data class PaymentAuthorization {
 	
 	public PaymentAuthorization setPayment(Payment payment) {
 		setPayment(payment);
+		return this;
+	}
+	
+	public PaymentAuthorization invalid() {
+		this.valid = false;
 		return this;
 	}
 }

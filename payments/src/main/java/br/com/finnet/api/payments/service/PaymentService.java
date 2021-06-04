@@ -1,17 +1,21 @@
 package br.com.finnet.api.payments.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import br.com.finnet.api.payments.dto.PaymentSearch;
 import br.com.finnet.api.payments.entidy.Payment;
 import br.com.finnet.api.payments.entidy.PaymentAuthorization;
+import br.com.finnet.api.payments.exceptions.NotFoundException;
 import br.com.finnet.api.payments.feing.AuthFeing;
 import br.com.finnet.api.payments.repository.PaymentAuthorizationRepository;
 import br.com.finnet.api.payments.repository.PaymentRepository;
@@ -49,8 +53,17 @@ public class PaymentService {
 		return paymentAuhorizationRepository.save(adiqService.requestPayment(payment).setPayment(payment));
 	}
 	
-	public List<Payment> search(PaymentSearch params){
-		return repository.findAll(PaymentSpecification.search(params));
+	@Transactional
+	public PaymentAuthorization cancelPayment(String payment) throws NotFoundException {		
+		Optional<PaymentAuthorization> auth = paymentAuhorizationRepository.findByPaymentIdAndValidIsTrue(payment);
+		if(auth.isPresent()) {
+			return paymentAuhorizationRepository.save(paymentAuhorizationRepository.save(adiqService.cancelPayment(paymentAuhorizationRepository.save(auth.get().invalid()))));
+		}
+		throw new NotFoundException("payment not found or is invalid");
+	}
+	
+	public Page<Payment> search(PaymentSearch params){
+		return repository.findAll(PaymentSpecification.search(params), PageRequest.of(params.getPageNum(), params.getPagesize()==0 ? 20 : params.getPagesize()));
 	}
 	
 
