@@ -1,0 +1,104 @@
+version: '3.4'
+services:
+
+ config:
+   image: finnet/config
+   restart: always
+   build: 
+     context: .
+     dockerfile: Dockerfile   
+   working_dir: /config
+   container_name: config
+   environment:
+     TZ: America/Sao_paulo
+     SPRING_BOOT_ENVIRONMENT: Production
+   volumes:
+     - ./config:/config
+     - ~/.m2:/root/.m2
+   ports:
+     - "8888:8888"
+   command: mvn clean spring-boot:run
+   
+ eureka:
+   image: finnet/eureka
+   restart: always
+   build: 
+     context: .
+     dockerfile: Dockerfile   
+   working_dir: /eureka
+   container_name: eureka
+   environment:
+     TZ: America/Sao_paulo
+     SPRING_BOOT_ENVIRONMENT: Production
+   volumes:
+     - ./eureka:/eureka
+     - ~/.m2:/root/.m2
+   ports:
+     - "8761:8761"
+   command: mvn clean spring-boot:run
+   depends_on: 
+      - config
+      
+ gateway:
+   image: finnet/gateway
+   restart: always
+   build: 
+     context: .
+     dockerfile: Dockerfile   
+   working_dir: /gateway
+   container_name: gateway
+   environment:
+     TZ: America/Sao_paulo
+     SPRING_BOOT_ENVIRONMENT: Production
+   volumes:
+     - ./gateway:/gateway
+     - ~/.m2:/root/.m2
+   ports:
+     - "8989:8989"
+   command: mvn clean spring-boot:run
+   depends_on: 
+      - config
+      - eureka
+      
+ oauth:
+   image: finnet/oauth
+   restart: always
+   build: 
+     context: .
+     dockerfile: Dockerfile   
+   working_dir: /oauth
+   container_name: oauth
+   environment:
+     TZ: America/Sao_paulo
+     SPRING_BOOT_ENVIRONMENT: Production
+   volumes:
+     - ./oauth:/oauth
+     - ~/.m2:/root/.m2
+   ports:
+     - "9292:9292"
+   command: mvn clean spring-boot:run
+   depends_on: 
+      - config
+      - eureka
+      
+ payments:
+   image: finnet/payments
+   restart: always
+   build: 
+     context: .
+     dockerfile: Dockerfile   
+   working_dir: /payments
+   container_name: payments
+   environment:
+     TZ: America/Sao_paulo
+     SPRING_BOOT_ENVIRONMENT: Production
+   volumes:
+     - ./payments:/payments
+     - ~/.m2:/root/.m2
+   ports:
+     - "9393:9393"
+   command: mvn clean spring-boot:run
+   depends_on: 
+      - config
+      - eureka
+      
