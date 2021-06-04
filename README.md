@@ -41,7 +41,101 @@ Por padrão, o banco de dados configurado está:
 
 ### Autenticação
 
+Na autenticação o projeto utiliza oAuth2 e o JWT para realizar a autenticação.
+Nessa etapa também não inventei nada, isto é uma tecnologia extraordinária para autenticação e segurança que funciona muito bem com o spring, na verdade em que o spring se dá mal eim?
 
+Não vou explicar como funciona o oAuth2 nem o JWT, isto já temos no grande google.com.
+
+Mas, o que você precisa para conseguir se comunicar com nossa api é:
+
+* Client Id
+* Client Secret
+* Username
+* Password
+* Token
+
+Vamos aos passos...
+
+Para ter sucesso na chamada dos endpoints, você precisa conseguir um token.
+
+Para conseguir um token, é necessário enviar um post para:
+
+	http://localhost:8989/auth/oauth/token
+	
+Este endpoint está protegido com Basic Auth, então você precisa enviar o clientid e clientsecret juntos separado por dois pontos (:) criptografados com base64 no header da requisição.
+
+Ficando assim:
+
+	myclientid:mysecretid
+	
+Ah, não esqueça de colocar em base64
+
+O *myclientid* e *mysecretid* está em:
+
+	config/src/main/resources/config/auth-dev.properties
+	
+O nome dos parâmetros são:
+
+	security.user.name e security.user.password
+	
+Ou seja, se você não modificar, essas serão o clientid e secretid por padrão:
+
+	ClientId: finnet
+	SecretId: 123456
+	
+Claro, não coloque uma senha dessa em produção, está muito fácil.
+
+Você precisará também enviar no body da requisição os dados de autenticação do usuário em json, ficando mais ou menos assim:
+
+	{
+		grant_type: password,
+		username: finet,
+		password: 123456
+	}
+	
+O usuário e senha fica no banco do auth, na tabela users
+Não criamos um endpoint para cadastrar usuários, deixamos isso mais pra frente (:
+Mas, criamos uma *Bean* que verifica no banco de dados se tem algum usuário, se a tabela estiver vazia ele insere um usuário padrão. O username e password desse usuário fica em:
+
+	config/src/main/resources/config/auth-dev.properties
+	
+Dentro do arquivo, você verá a seguinte configuração:
+
+	finet.admin.username=finnet
+	finet.admin.password=123456
+	
+Você pode modifica-lo caso deseje que seu usuário padrão tenha outro username e outro password.
+Mas lembre-se, ele somente insere esse usuário apenas se a tabela estiver vazia tudo bem? Foi apenas um facilitador que criei.
+
+Sem mais delongas, faça um POST!
+
+Se tiver feito tudo certinho, você terá uma resposta parecida com esta:
+
+	{
+	    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MjI4MzMyODAsInVzZXJfbmFtZSI6ImZpbmV0IiwianRpIjoiMWRlMWM1N2UtZGRhYS00ZjFjLWIxYmYtZGRkMGEwMTM1YTBjIiwiY2xpZW50X2lkIjoiZmlubmV0Iiwic2NvcGUiOlsiYWxsIl19.CvPR5C4QxRUSL1RnMoq-tlnFYWOiB1CB9JWrjjcjGz4",
+	    "token_type": "bearer",
+	    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MjI5MTg3ODAsInVzZXJfbmFtZSI6ImZpbmV0IiwianRpIjoiOTljYjNlNWUtNDk2ZS00NmYxLTk5OTItMDMwMTgzMTdlNmM3IiwiY2xpZW50X2lkIjoiZmlubmV0Iiwic2NvcGUiOlsiYWxsIl0sImF0aSI6IjFkZTFjNTdlLWRkYWEtNGYxYy1iMWJmLWRkZDBhMDEzNWEwYyJ9.nGGcjs1tuzQ2O5aHdCqX0vPufM5rVEXR4edRT2SDo1A",
+	    "expires_in": 899,
+	    "scope": "all",
+	    "jti": "1de1c57e-ddaa-4f1c-b1bf-ddd0a0135a0c"
+	}
+	
+Finalmente, você tem um *access_token*, você deverá inserir ele nas das requisições à api adicionando no header com o nome *Authorization*
+
+Ficando assim:
+
+	Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MjI4MzMyODAsInVzZXJfbmFtZSI6ImZpbmV0IiwianRpIjoiMWRlMWM1N2UtZGRhYS00ZjFjLWIxYmYtZGRkMGEwMTM1YTBjIiwiY2xpZW50X2lkIjoiZmlubmV0Iiwic2NvcGUiOlsiYWxsIl19.CvPR5C4QxRUSL1RnMoq-tlnFYWOiB1CB9JWrjjcjGz4
+	
+Esse token não é pra sempre... por segurança ele expira e você deve renová-lo ou gerar outro.
+
+Para renovar use o mesmo endpoint que você usou para criar o token, mas altere o body enviando o *refresh_token*, ficando assim:
+
+	{
+		grant_type: refresh_token,
+		refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MjI5MTg3ODAsInVzZXJfbmFtZSI6ImZpbmV0IiwianRpIjoiOTljYjNlNWUtNDk2ZS00NmYxLTk5OTItMDMwMTgzMTdlNmM3IiwiY2xpZW50X2lkIjoiZmlubmV0Iiwic2NvcGUiOlsiYWxsIl0sImF0aSI6IjFkZTFjNTdlLWRkYWEtNGYxYy1iMWJmLWRkZDBhMDEzNWEwYyJ9.nGGcjs1tuzQ2O5aHdCqX0vPufM5rVEXR4edRT2SDo1A
+	}
+	
+Não esqueça de enviar também no header o base64 do clientid e secretid, da mesma forma que no passo anterior de gerar os tokens.	
 
 ### Modo de funcionamento
 
