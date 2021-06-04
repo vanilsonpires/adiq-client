@@ -93,9 +93,9 @@ Você precisará também enviar no body da requisição os dados de autenticaç�
 		password: 123456
 	}
 	
-O usuário e senha fica no banco do auth, na tabela users
+O usuário e senha fica no banco do auth, na tabela users.
 Não criamos um endpoint para cadastrar usuários, deixamos isso mais pra frente (:
-Mas, criamos uma *Bean* que verifica no banco de dados se tem algum usuário, se a tabela estiver vazia ele insere um usuário padrão. O username e password desse usuário fica em:
+mas, criamos uma *Bean* que verifica no banco de dados se tem algum usuário, se a tabela estiver vazia ele insere um usuário padrão. O username e password desse usuário fica em:
 
 	config/src/main/resources/config/auth-dev.properties
 	
@@ -170,8 +170,39 @@ Para mais detalhes sobre os parâmetros e respostas, veja a documentação em ht
 
 Cada microserviço tem seu *bootstrap.properties*, nele adicionamos as configurações que são necessárias antes mesmo do microserviço buscar suas configurações no nosso microserviço *config*, aqui é importante deixamos apenas as configurações que realmente são necessárias antes de ocorrer essa comunicação. No caso aqui, estou usando para informar ao microserviço onde ele tem que buscar essas configurações, observe que isso realmente é necessário, pois como vou buscar minhas configurações sem saber onde devo ir não é mesmo? Ou seja, coloque aqui apenas informações desse nível, não vamos deixar que nosso *config* não sirva para nada, ele tem um papel muito importante e que será útil para manutenção da cloud.
 
+#### Deploy
 
+No mundo perfeito, devemos adicionar um projeto de microserviços em uma cloud e com um kubernet gerenciando as imagens.
 
+Mas, para demonstração iremos subir localmente mesmo só para apreciarmos esta tecnologia... :D
+
+Para subir localmente, fixei a porta dos microserviços, numa cloud você não deve fazer isso já que teremos várias instâncias de um mesmo microserviço.
+
+Para deixar as portas aleatórias, vá em:
+
+	config/src/main/resources/config
+	
+E vá modificando as linhas das configurações dos microserviços de
+
+	server.port: 9292 (ou qualquer outra que tiver lá)
+	
+Para
+	
+	server.port=${PORT:0}
+	
+Feito isto, seu microserviço terá uma porta aleatória, fácil não? Mas lembrando, você não precisa fazer isto para este nosso teste.
+
+Como já deixei um docker-compose todo bonitinho e o Dockerfile no local, você só precisa rodar esse comando na raiz do projeto:
+
+	docker-compose up -d --no-recreate;
+	
+Claro, você precisa ter o docker bonitinho e funcionando em sua máquina.
+
+Ao rodar esse comando, o docker irá fazer o download da imagem no dockerFile e subir as instâncias dos microserviços. No docker-compose coloquei as regras de dependências lá... por exemplo todos dependem do config (porque no config tem as configurações de todos) o eureka depende só do config, pois ele é o cara que descobre e registra os microserviços, então precisaremos dele vivo antes de subir as outras instâncias, depois subimos o gateway e por fim os demais microserviços.
+
+Feito isto, a api ja deve está respondendo na porta 8989.
+
+Legal, né?
 
 
 
