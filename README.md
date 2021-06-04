@@ -59,7 +59,7 @@ No microserviço está exposto três endpoint, são:
 
 Para mais detalhes sobre os parâmetros e respostas, veja a documentação em http://localhost:8989/swagger-ui.html
 
-Composição dos pacotes dos microserviços:
+#### Composição do microserviço de payments
 
 * Config: Onde deixo as configurações do projeto, inicialmente existe duas configurações, são:
 	* SwaggerConfig, o swagger é uma ferramenta que usamos para documentar nossa API, é muito útil e amplamente usado no mercado.
@@ -75,6 +75,8 @@ Composição dos pacotes dos microserviços:
 * Specifications: É onde coloco minhas consultas bem espefícicas, aquelas que ficou difil pro spring data reproduzi-las por meio de seus repository. Nela podemos usar as técnicas do criteria Query e atender aquelas consultas bem específica do negócio. Neste projeto, estou usando para fazer pesquisa de registros.
 
 Cada microserviço tem seu *bootstrap.properties*, nele adicionamos as configurações que são necessárias antes mesmo do microserviço buscar suas configurações no nosso microserviço *config*, aqui é importante deixamos apenas as configurações que realmente são necessárias antes de ocorrer essa comunicação. No caso aqui, estou usando para informar ao microserviço onde ele tem que buscar essas configurações, observe que isso realmente é necessário, pois como vou buscar minhas configurações sem saber onde devo ir não é mesmo? Ou seja, coloque aqui apenas informações desse nível, não vamos deixar que nosso *config* não sirva para nada, ele tem um papel muito importante e que será útil para manutenção da cloud.
+
+
 
 
 
