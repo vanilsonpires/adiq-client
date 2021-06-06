@@ -196,7 +196,7 @@ Como já deixei um docker-compose todo bonitinho e o Dockerfile no local, você 
 
 	docker-compose up -d --no-recreate;
 	
-Claro, você precisa ter o docker bonitinho e funcionando em sua máquina.
+Claro, você precisa ter o docker instalado e funcionando em sua máquina.
 
 Ao rodar esse comando, o docker irá fazer o download da imagem no dockerFile e subir as instâncias dos microserviços. No docker-compose coloquei as regras de dependências lá... por exemplo todos dependem do config (porque no config tem as configurações de todos) o eureka depende só do config, pois ele é o cara que descobre e registra os microserviços, então precisaremos dele vivo antes de subir as outras instâncias, depois subimos o gateway e por fim os demais microserviços.
 
