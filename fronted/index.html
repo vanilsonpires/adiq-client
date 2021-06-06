@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Demonstração Integração ADIQ</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Vanilson Pires">
+    <meta name="generator" content="http://chalarangelo.github.io/htmltemplategenerator/">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="./script.js"></script>
+
+    <link rel="stylesheet" href="./style.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script src="https://developers.adiq.io/download/adiq-3ds-package-hml-1.0.0-min.js"></script>
+
+</head>
+
+<body>
+
+
+    <div class="container" style="margin-bottom: 100px;">
+
+        <div class="card" style="margin-top: 1rem;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <h2 id="approach">
+                            <div>Instruções</div>
+                        </h2>
+
+                        <p>
+                            Seja bem vindo à minha demonstração de uso desta api. Aqui faço uma simples demonstração de
+                            front-end usando html, css, js e nosso querido jQuery. Não precisavamos de nada complexo, só
+                            queremos ver a API funcionando.
+                        </p>
+
+                        <p>
+                            Para realizar seus testes, verifique o seu ambiente em que nossa api está sendo executada,
+                            caso haja divergências corrija os dados. Logo em seguida clique
+                            em 'Autenticar' para gerar um token. Se tudo estiver ocorrido bem, você verá o token no card
+                            'Token API'.
+                        </p>
+
+                        <p>
+                            No card 'Feedback' lhe mostrarei mensagens de erros e sucesso que possam vim a acontecer.
+                        </p>
+
+                        <p>
+                            No card 'Meu produto' você deverá descrever um produto fictício que usaremos na nossa
+                            simulação de compra. Após informar os campos detalhados clique em 'Adicionar ao carrinho'.
+                            Logo em seguida seu produto será listado no card 'Meu carrinho'. Lá você poderá acompanhar
+                            os produtos que você usará nesta simulação e remover caso assim deseje.
+                        </p>
+
+                        <p>
+                            Após adicionar seus produtos fictícios, vá ao card 'Pagamento', lá você verá o valor total
+                            da nossa compra simulada. Nele você deverá informar os dados de pagamento e clicar no botão
+                            'Realizar pagamento', acompanhe a mensagem no feedback e se tudo ocorrer bem você acabou de
+                            simular uma compra na nossa api intermediadora de pagametos. Iruuu :D
+                        </p>
+
+                        <p>
+                            Isto deu trabalho pra fazer, então se você testou e gostou me envie um feedback e me ajude a
+                            melhorar cada vez mais. Envie pra este e-mail: <a
+                                href="mailto: vanilsonpires@yahoo.com.br">vanilsonpires@yahoo.com.br</a>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend>
+                        Feedback
+                    </legend>
+
+                    <code id="messager">
+                        no messager
+                    </code>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend>
+                        Token API
+                    </legend>
+
+                    <code id="token">
+                        no token
+                    </code>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend>
+                        Meu ambiente
+                    </legend>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <label>Endereço da api</label>
+                            <input id="address" value="http://localhost:8989" type="text" class="form-control">
+                        </div>
+
+                        <div class="col-sm-12 col-md-3">
+                            <label>Client id</label>
+                            <input id="clientid" value="finnet" type="text" class="form-control">
+                        </div>
+
+                        <div class="col-sm-12 col-md-3">
+                            <label>Secret id</label>
+                            <input id="clinetpassword" value="123456" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-3">
+                            <label>Username</label>
+                            <input id="username" value="finnet" type="text" class="form-control">
+                        </div>
+
+                        <div class="col-sm-12 col-md-3">
+                            <label>Password</label>
+                            <input id="password" value="123456" type="text" class="form-control">
+                        </div>
+
+                        <div class="col-sm-12 col-md-3">
+                            <label>Status</label><br>
+                            <code id="stats">no autenticated</code>
+                        </div>
+
+                        <div class="col-sm-12 col-md-3">
+                            <button onclick="autenticar();" style="margin-top: 10px" class="btn btn-primary"
+                                type="button">
+                                Autenticar
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend>
+                        Meu produto
+                    </legend>
+
+                    <form id="formProduct">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <label>Descrição do Produto</label>
+                                <input type="text" required id="description" name="description"
+                                    placeholder="Faça aqui uma breve descrição do produto que está comprando"
+                                    class="form-control"></input>
+                            </div>
+
+                            <div class="col-sm-12 col-md-3">
+                                <label>Preço em R$</label>
+                                <input required name="price" step="0.01" min="0" max="999999"
+                                    placeholder="Digite aqui o preço" type="number" class="form-control"></input>
+                            </div>
+
+                            <div class="col-sm-12 col-md-3">
+                                <br>
+                                <button type="submit" class="btn btn-secondary" type="button">
+                                    Adicionar ao carrinho
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend>
+                        Meu carrinho
+                    </legend>
+
+                    <table id="cart" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Descrição</th>
+                                <th scope="col">Preço</th>
+                                <th scope="col">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend>
+                        Pagamento
+                    </legend>
+                </fieldset>
+                <form id="formPgt">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <label>Valor a pagar em R$</label>
+                            <input value="0.00" class="form-control" id="sum" type="number" readonly></input>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <label>Forma de pagamento</label>
+                            <select required class="form-control" id="typePgt">
+                                <option value="credit">Crédito</option>
+                                <option value="debit">Débito</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <label>Número do cartão</label>
+                            <input placeholder="Ex. 1234.5678.9101.1213" class="form-control" type="text"></input>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label>Nome titular (conforme impresso no cartão)</label>
+                            <input placeholder="Ex. Fulano B. da Silva" class="form-control" type="text"></input>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <label>Código de segurança</label>
+                            <input placeholder="Ex. 123" class="form-control" type="text"></input>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label>Quant. de parcelas</label>
+                            <select required class="form-control" id="typePgt">
+                                <option value="1">Avista</option>
+                                <option value="2">2x</option>
+                                <option value="3">3x</option>
+                                <option value="4">4x</option>
+                                <option value="5">5x</option>
+                                <option value="6">6x</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12" style="text-align:center; margin-top: 30px">
+                            <button class="btn-lg btn btn-success">
+                                Realizar pagamento
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
