@@ -9,8 +9,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import br.com.finnet.api.payments.entidy.Seller;
+import lombok.Data;
 
-public class PaymentCancelRequestDto {
+public @Data class PaymentCancelRequestDto {
 	
 	@NotNull(message = "id is required")
 	@Min(value = 1, message = "min id is one")
