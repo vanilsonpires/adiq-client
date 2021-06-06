@@ -16,8 +16,10 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import lombok.Data;
+
 @Entity(name = "seller")
-public class Seller {
+public @Data class Seller {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
