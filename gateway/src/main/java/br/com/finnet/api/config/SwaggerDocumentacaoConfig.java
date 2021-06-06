@@ -27,7 +27,7 @@ public class SwaggerDocumentacaoConfig implements SwaggerResourcesProvider {
 		List<SwaggerResource> resources = new ArrayList<SwaggerResource>();
 		Map<String, ZuulRoute> routes = properties.getRoutes();
 		routes.keySet().stream().forEach(route -> {
-			String path = "/" + routes.get(route).getLocation().replaceAll("-service", "") + "/api-docs";
+			String path = "/" + routes.get(route).getLocation().replaceAll("-service", "") + "/v2/api-docs";
 			resources.add(swaggerResource(routes.get(route).getServiceId(), path, "3.0"));
 		});
 		return resources;

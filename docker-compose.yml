@@ -15,8 +15,6 @@ services:
    volumes:
      - ./config:/config
      - ~/.m2:/root/.m2
-   ports:
-     - "8888:8888"
    command: mvn clean spring-boot:run
    
  eureka:
@@ -33,8 +31,6 @@ services:
    volumes:
      - ./eureka:/eureka
      - ~/.m2:/root/.m2
-   ports:
-     - "8761:8761"
    command: mvn clean spring-boot:run
    depends_on: 
       - config
@@ -74,8 +70,6 @@ services:
    volumes:
      - ./oauth:/oauth
      - ~/.m2:/root/.m2
-   ports:
-     - "9292:9292"
    command: mvn clean spring-boot:run
    depends_on: 
       - config
@@ -95,8 +89,6 @@ services:
    volumes:
      - ./payments:/payments
      - ~/.m2:/root/.m2
-   ports:
-     - "9393:9393"
    command: mvn clean spring-boot:run
    depends_on: 
       - config

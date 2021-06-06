@@ -18,8 +18,24 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-
-	private final String[] publics = { "/swagger-ui.html", "/auth/oauth/token", "/auth/users/valid" };
+	
+	private final String[] publics = { 
+			"/",
+			"/swagger-resources/**",
+			"/payments/v2/api-docs",
+			"/auth/v2/api-docs",
+	        "/swagger-ui.html",
+	        "/api-docs",
+	        "/webjars/**",
+	        "/documentacao",
+	        "/documentation",
+	        "/swagger-ui/**",
+	        "/swagger-ui.html",
+	        "/api-docs",
+	        "/auth/oauth/token",
+	        "/auth/users/valid", 
+	        "/auth/oauth/token", 
+	        "/auth/users/valid" };
 
 	@Autowired
 	private JwtTokenStore tokenStore;
