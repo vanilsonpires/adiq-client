@@ -151,7 +151,7 @@ No microserviço está exposto três endpoint, são:
 * GET /payments para consultar pagamentos
 * PUT /payments/{payment} para cancelar pagamentos
 
-Para mais detalhes sobre os parâmetros e respostas, veja a documentação em http://localhost:8989/swagger-ui.html
+Para mais detalhes sobre os parâmetros e respostas, veja a documentação em http://localhost:8989/swagger-ui/
 
 #### Composição do microserviço de payments
 
