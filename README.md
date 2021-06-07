@@ -204,6 +204,17 @@ Feito isto, a api ja deve está respondendo na porta 8989.
 
 Legal, né?
 
+#### Testes
+
+Na pasta *fronted* tem um arquivo html que usaremos para testar a integração, ele está exatamente em:
+
+	/fronted/index.html
+	
+Como não precisamos de nada complexo, apenas testar nossa api criei um arquivo html simples, com um js e css usando o bootstrap e o jQuery.
+
+Pra testar, basta abrir ele com seu navegador e seguir as instruções no inicio da tela.
+	
+
 
 
 
