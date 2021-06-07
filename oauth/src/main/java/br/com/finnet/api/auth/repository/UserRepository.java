@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	public Optional<User> findByUsernameIgnoreCase(String username);
 	
 	@Cacheable(value = "UserRepository.findIdByUsername")
-	public Long findIdByUsername(String username);
+	public User findByUsername(String username);
 
 }

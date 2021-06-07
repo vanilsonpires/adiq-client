@@ -1,6 +1,4 @@
-const autenticar = () =>{
-    generateToken();
-}
+const autenticar = () => generateToken();
 
 const addresApi = () => $("#address").val();
 
@@ -10,17 +8,23 @@ const password = ()=> $("#password").val();
 
 const clientid = ()=> $("#clientid").val();
 
+const token = ()=> $("#token").html();
+
 const feedback = (message) => $("#messager").html(message);
 
 const clientpassword = ()=> $("#clinetpassword").val();
+
+const uuidv4 = () => Math.random().toString(36).slice(-6);
+
+const basicAuthorization = (request) =>  request.setRequestHeader("Authorization", "Basic " + btoa(clientid() + ":" + clientpassword()));
+
+const bearerAuthorization = (request) =>  request.setRequestHeader("Authorization", `bearer ${token()}`);
 
 const loginSucess = (data) =>{
     $("#stats").html('Authenticated');
     $("#token").html(data.access_token);    
     feedback('Login successful');
 }
-
-const basicAuthorization = (request) =>  request.setRequestHeader("Authorization", "Basic " + btoa(clientid() + ":" + clientpassword()));
 
 const formData = (formid) =>{
     let array = $(`#${formid}`).serializeArray();
@@ -31,16 +35,20 @@ const formData = (formid) =>{
     return data;
 }
 
-const uuidv4 = () => Math.random().toString(36).slice(-6);
-
 const addItem = (item) =>{
     let fakeId = uuidv4();
-    $('#cart tr:last').after(`<tr id="carRow${fakeId}">
-        <td>${fakeId}</td>    
-        <td>${item.description}</td>
-        <td class="price">${item.price}</td>
-        <td><button class="btn btn-danger" onClick="removeItem('${fakeId}')">Remover</button></td>
-    </tr>`);
+    $('#cart tr:last').after(`
+        <tr id="carRow${fakeId}">
+            <td>${fakeId}</td>    
+            <td class="description">${item.description}</td>
+            <td class="price">${item.price}</td>
+            <td>
+                <button class="btn btn-danger" onClick="removeItem('${fakeId}')">
+                    Remover
+                </button>
+            </td>
+        </tr>`
+    );
     calcSum();
 }
 
@@ -78,6 +86,59 @@ const generateToken = ()=>{
       });
 }
 
+const toJsonProducts = ()=>{
+    let items = [];
+    $('#cart .price').each((index, element)=>{
+        items[index] = {
+            amount: parseFloat($(element).html()),
+            ratePercent: 0,
+            rateAmount: 0,
+            description: ''
+        }
+    });
+    $('#cart .description').each((index, element)=>{
+        items[index].description = $(element).html();
+    });    
+    return items;
+}
+
+const pay = (values)=>{
+    let address = addresApi();
+    let data = {
+        transactionType: values.typePgt,
+        amount: parseFloat(values.sum),
+        currencyCode: 'brl',
+        productType: "avista",
+        installments: values.installments,
+        captureType: "ac",
+        recurrent: false ,
+        cardInfo: {
+            numberToken: values.cardNumber,
+            cardholderName: values.owner,
+            securityCode: values.securityCode,
+            brand: values.brand,
+            expirationMonth: values.expirationMonth,
+            expirationYear: values.expirationYear
+        },
+        sellers: [{
+            amount: values.sum,
+            items: toJsonProducts()
+        }]
+    }
+    $.ajax({
+        type: "POST",
+        url: `${address}/payments`,
+        contentType: "application/json",
+        dataType : 'json',
+        beforeSend: bearerAuthorization,
+        data: JSON.stringify(data),        
+        error: (response) => {
+            feedback(response.responseText);
+        },
+        success: (response) => feedback('Compra efetuada com sucesso')
+      });
+}
+
 $(window).on("load", function(){
     $("#formProduct").submit((event)=>{
         event.preventDefault();
@@ -85,4 +146,13 @@ $(window).on("load", function(){
         $('#formProduct').trigger("reset");
         $("#description").focus();
     })
- })
+
+    $("#formPgt").submit((event)=>{
+        event.preventDefault();
+        pay(formData("formPgt"));
+    })
+
+    $.get("https://api.ipify.org/?format=json",(response)=>{
+        $("#myip").val(response.ip);
+    })
+ });

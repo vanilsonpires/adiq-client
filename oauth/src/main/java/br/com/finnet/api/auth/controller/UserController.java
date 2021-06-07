@@ -14,7 +14,7 @@ import br.com.finnet.api.auth.services.UserService;
 import br.com.finnet.api.auth.utils.JWTUtil;
 
 @RestController
-@RequestMapping(name = "users")
+@RequestMapping("/users")
 public class UserController {
 	
 	@Autowired
@@ -27,7 +27,7 @@ public class UserController {
 	public ResponseEntity<Long> myId(@RequestHeader("Authorization") String authorization) {
 		try {
 			Map<String, Object> retorno = util.recoveryUsername(authorization);
-			return ResponseEntity.ok(usuarioService.findIdByUsername(retorno.get("user_name").toString()));
+			return ResponseEntity.ok(usuarioService.findIdByUsername(retorno.get("user_name").toString()).getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
